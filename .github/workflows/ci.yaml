@@ -24,5 +24,5 @@ jobs:
         with:
           credentials: "${{ secrets.CHARMHUB_TOKEN }}"
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-          channel: "${{ steps.channel.outputs.name }}"
+          channel: "${{ steps.channel.outputs.name }}/develop"
           github-tag: false
