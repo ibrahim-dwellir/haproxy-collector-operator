@@ -1,0 +1,79 @@
+# This file configures Charmcraft.
+# See https://canonical-charmcraft.readthedocs-hosted.com/en/stable/reference/files/charmcraft-yaml-file/
+type: charm
+name: haproxy-collector
+title: HAProxy Collector Charm
+summary: A charm for collecting data from HAProxy instances.
+description: |
+  This charm is designed to collect data from HAProxy instances and
+  integrate it with a database. It provides configuration options for
+  the collector name, HAProxy instance, and other parameters necessary
+  for the collector to function correctly.
+
+# Documentation:
+# https://canonical-charmcraft.readthedocs-hosted.com/en/stable/howto/build-guides/select-platforms/
+base: ubuntu@24.04
+platforms:
+  amd64:
+
+parts:
+  charm:
+    plugin: charm
+    source: .
+
+# (Optional) Configuration options for the charm
+# This config section defines charm config options, and populates the Configure
+# tab on Charmhub.
+# More information on this section at:
+# https://canonical-charmcraft.readthedocs-hosted.com/en/stable/reference/files/charmcraft-yaml-file/#config
+# General configuration documentation:
+# https://canonical-juju.readthedocs-hosted.com/en/latest/user/reference/configuration/#application-configuration
+config:
+  options:
+    collector-name:
+      description: |
+        The name of the collector. This should be unique as it
+        generates and requests owner_id fields from the database.
+      type: string
+    haproxy-name:
+      description: |
+        The name of the HAProxy to use for this collector.
+        This is used to obtain the HAProxy ID from the database.
+      type: string
+    haproxy-url:
+      description: |
+        The URL of the HAProxy instance to use for this collector.
+        This is used to query HAProxy's configuration.
+      type: string
+    haproxy-username:
+      description: |
+        The username to use for the HAProxy instance.
+        This is used to authenticate with the HAProxy instance.
+      type: string
+    haproxy-password:
+      description: |
+        The password to use for the HAProxy instance.
+        This is used to authenticate with the HAProxy instance.
+      type: string
+    revision:
+      type: string
+      description: |
+        Revison of the collector to use.
+    channel:
+      type: string
+      default: latest/stable
+      description: |
+        Channel of the collector to use.
+        This is used to determine which version of the collector to use.
+
+actions:
+  start:
+    description: Start the haproxy collector
+  stop:
+    description: Stop the haproxy collector
+  restart:
+    description: Restart the haproxy collector
+
+requires:
+  db-integrator:
+    interface: collector-credentials

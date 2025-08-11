@@ -1,0 +1,28 @@
+name: Build and publish
+on:
+  push:
+    branches:
+      - develop
+      - main
+
+jobs:
+  build:
+    name: Release to edge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: list directory content
+        run: ls -lah
+      - name: Select charmhub channel
+        uses: canonical/charming-actions/channel@2.2.0
+        id: channel
+      - name: Upload charm to charmhub
+        uses: canonical/charming-actions/upload-charm@2.2.0
+        with:
+          credentials: "${{ secrets.CHARMHUB_TOKEN }}"
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          upload-image: "true"
+          channel: "${{ steps.channel.outputs.name }}"
