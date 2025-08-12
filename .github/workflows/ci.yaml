@@ -26,13 +26,17 @@ jobs:
           merge-multiple: true
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
-      - name: Select charmhub channel
-        uses: canonical/charming-actions/channel@2.7.0
-        id: channel
+      - name: Find charm files
+        id: find-charms
+        run: |
+          charm_files=$(find . -name "*.charm" -type f | tr '\n' ',' | sed 's/,$//')
+          echo "charm-paths=$charm_files" >> $GITHUB_OUTPUT
+          echo "Found charm files: $charm_files"
       - name: Upload charm to charmhub
         uses: canonical/charming-actions/upload-charm@2.7.0
         with:
           credentials: "${{ secrets.CHARMHUB_TOKEN }}"
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-          channel: "${{ steps.channel.outputs.name }}/develop"
+          channel: latest/edge/develop
           github-tag: false
+          built-charm-path: ${{ steps.find-charms.outputs.charm-paths }}
