@@ -7,15 +7,25 @@ on:
 
 jobs:
   build:
-    name: Release to edge
+    
+    name: Build Polkadot charm
+    uses: canonical/data-platform-workflows/.github/workflows/build_charm.yaml@v32.0.0
+    with:
+      charmcraft-snap-revision: 6672
+      cache: false
+  publish:
     runs-on: ubuntu-latest
+    needs: build
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Download charm package(s)
+        uses: actions/download-artifact@v4
         with:
-          fetch-depth: 0
-      - name: list directory content
-        run: ls -lah
+          pattern: ${{ needs.build.outputs.artifact-prefix }}-*
+          merge-multiple: true
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: Select charmhub channel
         uses: canonical/charming-actions/channel@2.7.0
         id: channel

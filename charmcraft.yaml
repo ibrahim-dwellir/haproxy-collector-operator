@@ -12,9 +12,10 @@ description: |
 
 # Documentation:
 # https://canonical-charmcraft.readthedocs-hosted.com/en/stable/howto/build-guides/select-platforms/
-base: ubuntu@24.04
+# base: ubuntu@24.04
 platforms:
-  amd64:
+  ubuntu@22.04:amd64:
+  ubuntu@24.04:amd64:
 
 parts:
   charm:
